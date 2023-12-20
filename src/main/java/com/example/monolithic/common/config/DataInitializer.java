@@ -12,6 +12,7 @@ import com.example.monolithic.repository.WheelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -39,18 +40,36 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private List<Body> insertDataBody() {
-        ResponseEntity<BodyDTO> response = new RestTemplate().exchange(urlHolder.getBodyMock(), HttpMethod.GET, null, BodyDTO.class);
-        return null;
+        ResponseEntity<List<BodyDTO>> res = new RestTemplate()
+                .exchange(urlHolder.getBodyMock(), HttpMethod.GET, null,
+                        new ParameterizedTypeReference<>() {});
+
+        List<Body> bodies = res.getBody().stream().map(bodyDTO ->
+                new Body(bodyDTO.bodyId(), bodyDTO.bodyName(), bodyDTO.bodyColor(), bodyDTO.bodyStyle(), bodyDTO.bodyVendor(), bodyDTO.bodyStatus())
+        ).toList();
+        return bodies;
     }
 
     private List<Engine> insertDataEngine() {
-        ResponseEntity<EngineDTO> response = new RestTemplate().exchange(urlHolder.getEngineMock(), HttpMethod.GET, null, EngineDTO.class);
-        return null;
+        ResponseEntity<List<EngineDTO>> res = new RestTemplate()
+                .exchange(urlHolder.getBodyMock(), HttpMethod.GET, null,
+                        new ParameterizedTypeReference<>() {});
+
+        List<Engine> engines = res.getBody().stream().map(engineDTO ->
+                new Engine(engineDTO.engineId(), engineDTO.engineName(), engineDTO.enginePower(), engineDTO.engineFuel(), engineDTO.engineVendor(), engineDTO.engineStatus())
+        ).toList();
+        return engines;
     }
 
     private List<Wheel> insertDataWheel() {
-        ResponseEntity<WheelDTO> response = new RestTemplate().exchange(urlHolder.getWheelMock(), HttpMethod.GET, null, WheelDTO.class);
-        return null;
+        ResponseEntity<List<WheelDTO>> res = new RestTemplate()
+                .exchange(urlHolder.getBodyMock(), HttpMethod.GET, null,
+                        new ParameterizedTypeReference<>() {});
+
+        List<Wheel> wheels = res.getBody().stream().map(wheelDTO ->
+                new Wheel(wheelDTO.wheelId(), wheelDTO.wheelName(), wheelDTO.wheelColor(), wheelDTO.wheelSize(), wheelDTO.wheelVendor(), wheelDTO.wheelStatus())
+        ).toList();
+        return wheels;
     }
 
 }

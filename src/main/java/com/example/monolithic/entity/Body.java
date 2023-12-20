@@ -6,17 +6,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Body {
     @Id
-    private Long body_id;
-    private String body_name;
-    private String body_color;
+    private Long bodyId;
+    private String bodyName;
+    private String bodyColor;
     @Enumerated(EnumType.STRING)
-    private BodyStyle body_style;
-    private String body_vendor;
+    private BodyStyle bodyStyle;
+    private String bodyVendor;
     @Enumerated(EnumType.STRING)
-    private UsageStatus body_status;
-
+    private UsageStatus bodyStatus;
 }

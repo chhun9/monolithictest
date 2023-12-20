@@ -1,0 +1,10 @@
+
+random:
+  insert:
+    data: true
+
+rest-url:
+  combination: "http://localhost:8000"
+  body-mock: ${restUrl.combination}/combination/body/
+  engine-mock: ${restUrl.combination}/combination/engine/
+  wheel-mock: ${restUrl.combination}/combination/wheel/

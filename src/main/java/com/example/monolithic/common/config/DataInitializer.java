@@ -9,6 +9,7 @@ import com.example.monolithic.entity.Wheel;
 import com.example.monolithic.repository.BodyRepository;
 import com.example.monolithic.repository.EngineRepository;
 import com.example.monolithic.repository.WheelRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -48,24 +50,24 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private List<Body> insertDataBody() {
-        List<BodyDTO> bodyMockData = getMockData(urlHolder.getBodyMock() + "/get-info");
+        List<BodyDTO> bodyMockData = getMockData(urlHolder.getBodyMock() + "/get-info", BodyDTO.class);
         return insertData(bodyMockData, BodyDTO::bodyId, Body::getBodyFromBodyDTO, bodyRepository);
     }
 
     private List<Engine> insertDataEngine() {
-        List<EngineDTO> engineMockData = getMockData(urlHolder.getEngineMock() + "/get-info");
+        List<EngineDTO> engineMockData = getMockData(urlHolder.getEngineMock() + "/get-info", EngineDTO.class);
         return insertData(engineMockData, EngineDTO::engineId, Engine::getEngineFromEngineDTO, engineRepository);
     }
 
     private List<Wheel> insertDataWheel() {
-        List<WheelDTO> wheelMockData = getMockData(urlHolder.getWheelMock() + "/get-info");
+        List<WheelDTO> wheelMockData = getMockData(urlHolder.getWheelMock() + "/get-info", WheelDTO.class);
         return insertData(wheelMockData, WheelDTO::wheelId, Wheel::getWheelFromWheelDTO, wheelRepository);
     }
 
-    private <T> List<T> getMockData(String url) {
+    private <T> List<T> getMockData(String url, Class<T> responseType) {
         ResponseEntity<List<T>> responseEntity = new RestTemplate().exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
-        return responseEntity.getBody();
+        return responseEntity.getBody().stream().map(res -> new ObjectMapper().convertValue(res, responseType)).toList();
     }
 
     private <T, R> List<R> insertData(List<T> dtoList, Function<T, ?> idExtractor, Function<T, R> entityMapper, JpaRepository<R, ?> repository) {

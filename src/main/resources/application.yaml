@@ -18,4 +18,4 @@ rest-url:
   wheel-mock: ${rest-url.combination}/combination/wheel/
 
 random-insert:
-  data: false
+  data: true

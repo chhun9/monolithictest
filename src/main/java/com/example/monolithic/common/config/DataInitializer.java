@@ -22,10 +22,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -41,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
     private final WheelRepository wheelRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (isInsertData) {
             insertDataBody();
             insertDataEngine();
